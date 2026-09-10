@@ -428,7 +428,65 @@
 
 </div>
 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCjkkJXGwi5tvWQqwrLKNOC6sg2eHwtIgQ",
+    authDomain: "quadernoconti.firebaseapp.com",
+    projectId: "quadernoconti",
+    storageBucket: "quadernoconti.firebasestorage.app",
+    messagingSenderId: "451048670055",
+    appId: "1:451048670055:web:123675f190ea0bc4f565c2"
+  };
+
+  try{
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const docRef = doc(db, "quaderno-conti", "dati");
+
+    window.firebaseSync = {
+      async load(){
+        try{
+          const snap = await getDoc(docRef);
+          return snap.exists() ? snap.data().json : null;
+        }catch(e){
+          console.error('Firebase load error', e);
+          return null;
+        }
+      },
+      async save(jsonString){
+        try{
+          await setDoc(docRef, { json: jsonString, updatedAt: Date.now() });
+          return true;
+        }catch(e){
+          console.error('Firebase save error', e);
+          return false;
+        }
+      },
+      onRemoteChange(callback){
+        onSnapshot(docRef, (snap) => {
+          if(snap.exists() && snap.data().json){
+            callback(snap.data().json);
+          }
+        }, (err) => console.error('Firebase listen error', err));
+      }
+    };
+  }catch(e){
+    console.error('Firebase init error', e);
+  }
+
+  if(window.__resolveFirebaseReady) window.__resolveFirebaseReady();
+  else window.__firebaseReadyFallback = true;
+</script>
+
 <script>
+window.firebaseReadyPromise = new Promise(resolve => {
+  if(window.__firebaseReadyFallback){ resolve(); return; }
+  window.__resolveFirebaseReady = resolve;
+});
+
 window.addEventListener('error', function(e){
   try{
     const b = document.createElement('div');
@@ -545,7 +603,21 @@ function parseAmount(str){
 
 const hasCloudStorage = (typeof window.storage !== 'undefined' && window.storage !== null);
 
+async function waitForFirebase(timeoutMs){
+  return Promise.race([
+    window.firebaseReadyPromise,
+    new Promise(resolve => setTimeout(resolve, timeoutMs))
+  ]);
+}
+
 async function storageGetRaw(){
+  await waitForFirebase(4000);
+  if(window.firebaseSync){
+    try{
+      const remote = await window.firebaseSync.load();
+      if(remote) return remote;
+    }catch(e){ /* fall through to local storage */ }
+  }
   if(hasCloudStorage){
     const res = await window.storage.get(STORAGE_KEY, false);
     return res ? res.value : null;
@@ -559,7 +631,38 @@ async function storageSetRaw(value){
   } else {
     localStorage.setItem(STORAGE_KEY, value);
   }
+  if(window.firebaseSync){
+    try{ await window.firebaseSync.save(value); }catch(e){ /* local save already succeeded */ }
+  }
 }
+
+function handleRemoteUpdate(jsonString){
+  if(!loaded || !jsonString) return;
+  const currentJson = JSON.stringify(state);
+  if(jsonString === currentJson) return;
+  try{
+    const incoming = JSON.parse(jsonString);
+    state = {
+      accounts: incoming.accounts || [],
+      transactions: incoming.transactions || [],
+      budgets: incoming.budgets || [],
+      recurring: incoming.recurring || []
+    };
+    if(hasCloudStorage){ window.storage.set(STORAGE_KEY, jsonString, false).catch(()=>{}); }
+    else { try{ localStorage.setItem(STORAGE_KEY, jsonString); }catch(e){} }
+    render();
+    document.getElementById('statusNote').textContent = 'Aggiornato da un altro dispositivo.';
+  }catch(e){
+    console.error('Errore aggiornamento remoto', e);
+  }
+}
+
+(async function setupFirebaseListener(){
+  await window.firebaseReadyPromise;
+  if(window.firebaseSync){
+    window.firebaseSync.onRemoteChange(handleRemoteUpdate);
+  }
+})();
 
 async function loadState(){
   const statusEl = document.getElementById('statusNote');
@@ -572,9 +675,11 @@ async function loadState(){
       state.budgets = state.budgets || [];
       state.recurring = state.recurring || [];
     }
-    statusEl.textContent = hasCloudStorage
-      ? 'Dati salvati automaticamente su questo dispositivo.'
-      : 'Dati salvati automaticamente in questo browser.';
+    statusEl.textContent = window.firebaseSync
+      ? 'Dati sincronizzati tra i tuoi dispositivi (cloud).'
+      : (hasCloudStorage
+        ? 'Dati salvati automaticamente su questo dispositivo.'
+        : 'Dati salvati automaticamente in questo browser.');
   }catch(e){
     statusEl.textContent = 'Nessun dato precedente trovato: si parte da zero.';
   }
