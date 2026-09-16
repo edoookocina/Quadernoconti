@@ -229,6 +229,19 @@
   tbody tr:hover{background:var(--hover-tint);}
   tbody tr.desc-row td{padding:0 6px 6px 6px;border-bottom:1px solid var(--rule);}
   .desc-cell{color:var(--muted);font-size:11px;padding-left:16px !important;font-style:italic;}
+
+  .chart-line{fill:none;stroke-width:2;}
+  .chart-line.pos{stroke:var(--forest);}
+  .chart-line.neg{stroke:var(--rust);}
+  .chart-area{stroke:none;opacity:0.10;}
+  .chart-area.pos{fill:var(--forest);}
+  .chart-area.neg{fill:var(--rust);}
+  .chart-dot.pos{fill:var(--forest);}
+  .chart-dot.neg{fill:var(--rust);}
+  .chart-zero{stroke:var(--rule-strong);stroke-dasharray:3,3;}
+  .chart-label{font-size:9px;fill:var(--muted);}
+  .chart-summary{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;}
+  .chart-summary strong{color:var(--ink);font-family:"IBM Plex Mono",Consolas,monospace;font-weight:600;}
   td.amt{font-family:"IBM Plex Mono",Consolas,monospace;text-align:right;white-space:nowrap;}
   td.date{white-space:nowrap;color:var(--muted);}
   .empty{color:var(--muted);font-size:13.5px;padding:20px 0;text-align:center;}
@@ -310,7 +323,36 @@
             </div>
             <div class="field">
               <label>Categoria</label>
-              <input type="text" id="txCategory" list="categoryOptions" placeholder="es. Cibo">
+              <select id="txCategory">
+                <option value="">— scegli —</option>
+                <option value="Abbonamenti">Abbonamenti</option>
+                <option value="Autostrada">Autostrada</option>
+                <option value="Bar">Bar</option>
+                <option value="Barbiere">Barbiere</option>
+                <option value="Benzina">Benzina</option>
+                <option value="Burocrazia">Burocrazia</option>
+                <option value="Cibo">Cibo</option>
+                <option value="Elettronica">Elettronica</option>
+                <option value="Farmacia">Farmacia</option>
+                <option value="Hotel">Hotel</option>
+                <option value="Musica">Musica</option>
+                <option value="Parcheggio">Parcheggio</option>
+                <option value="Regali">Regali</option>
+                <option value="Rimborsi lavoro">Rimborsi lavoro</option>
+                <option value="Ristorante/asporto">Ristorante/asporto</option>
+                <option value="Sigarette">Sigarette</option>
+                <option value="Spesa">Spesa</option>
+                <option value="Spesa locale">Spesa locale</option>
+                <option value="Stipendio">Stipendio</option>
+                <option value="Taxi">Taxi</option>
+                <option value="Trasporti">Trasporti</option>
+                <option value="Treno">Treno</option>
+                <option value="Varie/imprevisti">Varie/imprevisti</option>
+                <option value="Vestiti">Vestiti</option>
+                <option value="Visita medica">Visita medica</option>
+                <option value="__custom__">Altro (scrivi)…</option>
+              </select>
+              <input type="text" id="txCategoryCustom" placeholder="Scrivi la categoria" style="display:none;margin-top:6px;">
             </div>
           </div>
           <div class="row2">
@@ -324,36 +366,11 @@
             </div>
           </div>
           <div class="form-error" id="txFormError"></div>
-          <button class="add" type="button" id="txSubmitBtn">Registra</button>
+          <div class="row2">
+            <button class="add" type="button" id="txSubmitBtn">Registra</button>
+            <button class="add" type="button" id="txCancelEditBtn" style="background:var(--muted);display:none;">Annulla modifica</button>
+          </div>
         </div>
-        <datalist id="categoryOptions">
-          <option value="Abbonamenti">
-          <option value="Altro">
-          <option value="Autostrada">
-          <option value="Bar">
-          <option value="Barbiere">
-          <option value="Benzina">
-          <option value="Burocrazia">
-          <option value="Cibo">
-          <option value="Elettronica">
-          <option value="Farmacia">
-          <option value="Hotel">
-          <option value="Musica">
-          <option value="Parcheggio">
-          <option value="Regali">
-          <option value="Rimborsi lavoro">
-          <option value="Ristorante/asporto">
-          <option value="Sigarette">
-          <option value="Spesa">
-          <option value="Spesa locale">
-          <option value="Stipendio">
-          <option value="Taxi">
-          <option value="Trasporti">
-          <option value="Treno">
-          <option value="Varie/imprevisti">
-          <option value="Vestiti">
-          <option value="Visita medica">
-        </datalist>
       </div>
     </div>
 
@@ -369,7 +386,36 @@
         <div id="budgetsList"></div>
         <button class="link" id="toggleBudgetForm">+ Nuovo budget</button>
         <div class="inline" id="budgetForm" style="display:none;">
-          <input type="text" id="budCategory" list="categoryOptions" placeholder="Categoria">
+          <select id="budCategory">
+            <option value="">— scegli —</option>
+            <option value="Abbonamenti">Abbonamenti</option>
+            <option value="Autostrada">Autostrada</option>
+            <option value="Bar">Bar</option>
+            <option value="Barbiere">Barbiere</option>
+            <option value="Benzina">Benzina</option>
+            <option value="Burocrazia">Burocrazia</option>
+            <option value="Cibo">Cibo</option>
+            <option value="Elettronica">Elettronica</option>
+            <option value="Farmacia">Farmacia</option>
+            <option value="Hotel">Hotel</option>
+            <option value="Musica">Musica</option>
+            <option value="Parcheggio">Parcheggio</option>
+            <option value="Regali">Regali</option>
+            <option value="Rimborsi lavoro">Rimborsi lavoro</option>
+            <option value="Ristorante/asporto">Ristorante/asporto</option>
+            <option value="Sigarette">Sigarette</option>
+            <option value="Spesa">Spesa</option>
+            <option value="Spesa locale">Spesa locale</option>
+            <option value="Stipendio">Stipendio</option>
+            <option value="Taxi">Taxi</option>
+            <option value="Trasporti">Trasporti</option>
+            <option value="Treno">Treno</option>
+            <option value="Varie/imprevisti">Varie/imprevisti</option>
+            <option value="Vestiti">Vestiti</option>
+            <option value="Visita medica">Visita medica</option>
+            <option value="__custom__">Altro (scrivi)…</option>
+          </select>
+          <input type="text" id="budCategoryCustom" placeholder="Scrivi la categoria" style="display:none;">
           <input type="text" inputmode="decimal" id="budLimit" placeholder="Limite mensile (es. 300 o 300,50)">
           <div class="form-error" id="budFormError"></div>
           <div class="row2">
@@ -399,6 +445,12 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="ledger-panel" style="margin-top:20px;">
+      <h2>Grafici</h2>
+      <div class="tagline" style="margin:-4px 0 12px;">Andamento del saldo totale nel tempo</div>
+      <div id="balanceChartWrap"></div>
     </div>
   </div>
 
@@ -855,6 +907,85 @@ function shortDateLabel(dateStr){
   return `${d}/${m}`;
 }
 
+function addDays(dateStr, n){
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  dt.setDate(dt.getDate() + n);
+  return localYmd(dt);
+}
+
+function computeBalanceSeries(){
+  const startTotal = state.accounts.reduce((sum, a) => sum + a.initialBalance, 0);
+  const byDate = {};
+  state.transactions.forEach(t => {
+    const delta = t.direction === 'in' ? t.amount : -t.amount;
+    byDate[t.date] = (byDate[t.date] || 0) + delta;
+  });
+  const dates = Object.keys(byDate).sort();
+  if(dates.length === 0){
+    return [{ date: localYmd(new Date()), total: startTotal }];
+  }
+  const points = [{ date: addDays(dates[0], -1), total: startTotal }];
+  let running = startTotal;
+  dates.forEach(d => {
+    running += byDate[d];
+    points.push({ date: d, total: running });
+  });
+  return points;
+}
+
+function renderBalanceChart(){
+  const wrap = document.getElementById('balanceChartWrap');
+  if(!wrap) return;
+  const points = computeBalanceSeries();
+  const width = 640, height = 220, padL = 8, padR = 8, padT = 14, padB = 26;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+  const values = points.map(p => p.total);
+  let minV = Math.min(...values);
+  let maxV = Math.max(...values);
+  if(minV === maxV){ minV -= 10; maxV += 10; }
+  const rangePad = (maxV - minV) * 0.15;
+  minV -= rangePad; maxV += rangePad;
+
+  const xFor = (i) => padL + (points.length === 1 ? plotW / 2 : (i / (points.length - 1)) * plotW);
+  const yFor = (v) => padT + plotH - ((v - minV) / (maxV - minV)) * plotH;
+
+  const trendUp = values[values.length - 1] >= values[0];
+  const trendClass = trendUp ? 'pos' : 'neg';
+
+  const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${xFor(i).toFixed(1)},${yFor(p.total).toFixed(1)}`).join(' ');
+  const areaPath = `${linePath} L${xFor(points.length - 1).toFixed(1)},${(padT + plotH).toFixed(1)} L${xFor(0).toFixed(1)},${(padT + plotH).toFixed(1)} Z`;
+
+  let zeroLine = '';
+  if(minV < 0 && maxV > 0){
+    const zy = yFor(0);
+    zeroLine = `<line x1="${padL}" y1="${zy.toFixed(1)}" x2="${width - padR}" y2="${zy.toFixed(1)}" class="chart-zero" />`;
+  }
+
+  const maxLabels = 6;
+  const step = Math.max(1, Math.ceil(points.length / maxLabels));
+  const dots = points.map((p, i) => {
+    const cx = xFor(i), cy = yFor(p.total);
+    const showLabel = (i % step === 0) || i === points.length - 1;
+    const label = showLabel ? `<text x="${cx.toFixed(1)}" y="${height - 8}" class="chart-label" text-anchor="middle">${shortDateLabel(p.date)}</text>` : '';
+    return `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.5" class="chart-dot ${trendClass}" />${label}`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" style="width:100%;height:auto;display:block;">
+      <path d="${areaPath}" class="chart-area ${trendClass}" />
+      ${zeroLine}
+      <path d="${linePath}" class="chart-line ${trendClass}" />
+      ${dots}
+    </svg>
+    <div class="chart-summary">
+      <span>Inizio: <strong>${fmt(points[0].total)}</strong></span>
+      <span>Attuale: <strong>${fmt(points[points.length - 1].total)}</strong></span>
+    </div>
+  `;
+}
+
 function ledgerTableHtml(list){
   const rows = list.map(t => {
     const acc = state.accounts.find(a => a.id === t.accountId);
@@ -866,7 +997,7 @@ function ledgerTableHtml(list){
       <td>${escapeHtml(t.category || '—')}</td>
       <td class="amt pos">${isIn ? fmt(t.amount) : ''}</td>
       <td class="amt neg">${!isIn ? fmt(t.amount) : ''}</td>
-      <td><button class="del-btn" data-del-tx="${t.id}" title="Elimina">×</button></td>
+      <td><button class="del-btn" data-edit-tx="${t.id}" title="Modifica">✎</button><button class="del-btn" data-del-tx="${t.id}" title="Elimina">×</button></td>
     </tr>`;
     if(t.description){
       row += `<tr class="desc-row"><td></td><td colspan="5" class="desc-cell">↳ ${escapeHtml(t.description)}</td></tr>`;
@@ -927,6 +1058,7 @@ function render(){
   renderRecurring();
   renderLedger();
   renderFullLedger();
+  renderBalanceChart();
 }
 
 document.getElementById('viewAllBtn').addEventListener('click', () => {
@@ -973,34 +1105,107 @@ document.getElementById('accSubmitBtn').addEventListener('click', submitAccount)
   document.getElementById(id).addEventListener('keydown', (e) => { if(e.key === 'Enter') submitAccount(); });
 });
 
+function wireCategorySelect(selectId, customId){
+  const sel = document.getElementById(selectId);
+  const custom = document.getElementById(customId);
+  sel.addEventListener('change', () => {
+    if(sel.value === '__custom__'){
+      custom.style.display = 'block';
+      custom.focus();
+    } else {
+      custom.style.display = 'none';
+      custom.value = '';
+    }
+  });
+}
+wireCategorySelect('txCategory', 'txCategoryCustom');
+wireCategorySelect('budCategory', 'budCategoryCustom');
+
+function getCategoryValue(selectId, customId){
+  const sel = document.getElementById(selectId);
+  const custom = document.getElementById(customId);
+  if(sel.value === '__custom__') return custom.value.trim();
+  return sel.value;
+}
+
+function setCategoryValue(selectId, customId, value){
+  const sel = document.getElementById(selectId);
+  const custom = document.getElementById(customId);
+  const known = Array.from(sel.options).some(o => o.value === value);
+  if(value && known){
+    sel.value = value;
+    custom.style.display = 'none';
+    custom.value = '';
+  } else if(value){
+    sel.value = '__custom__';
+    custom.style.display = 'block';
+    custom.value = value;
+  } else {
+    sel.value = '';
+    custom.style.display = 'none';
+    custom.value = '';
+  }
+}
+
 async function submitBudget(){
   const errEl = document.getElementById('budFormError');
   errEl.textContent = '';
-  const catInput = document.getElementById('budCategory');
   const limitInput = document.getElementById('budLimit');
-  const category = catInput.value.trim();
+  const category = getCategoryValue('budCategory', 'budCategoryCustom');
   const limit = parseAmount(limitInput.value);
-  if(!category){ errEl.textContent = 'Inserisci una categoria.'; return; }
+  if(!category){ errEl.textContent = 'Scegli o scrivi una categoria.'; return; }
   if(isNaN(limit)){ errEl.textContent = 'Inserisci un limite mensile valido (es. 300 o 300,50).'; return; }
   state.budgets = state.budgets.filter(b => b.category.toLowerCase() !== category.toLowerCase());
   state.budgets.push({ category, limit });
-  catInput.value = '';
+  setCategoryValue('budCategory', 'budCategoryCustom', '');
   limitInput.value = '';
   document.getElementById('budgetForm').style.display = 'none';
   render();
   await saveState();
 }
 function cancelBudgetForm(){
-  document.getElementById('budCategory').value = '';
+  setCategoryValue('budCategory', 'budCategoryCustom', '');
   document.getElementById('budLimit').value = '';
   document.getElementById('budFormError').textContent = '';
   document.getElementById('budgetForm').style.display = 'none';
 }
 document.getElementById('budCancelBtn').addEventListener('click', cancelBudgetForm);
 document.getElementById('budSubmitBtn').addEventListener('click', submitBudget);
-['budCategory','budLimit'].forEach(id => {
+['budLimit'].forEach(id => {
   document.getElementById(id).addEventListener('keydown', (e) => { if(e.key === 'Enter') submitBudget(); });
 });
+
+let editingTransactionId = null;
+
+function resetTxForm(){
+  editingTransactionId = null;
+  document.getElementById('txSubmitBtn').textContent = 'Registra';
+  document.getElementById('txCancelEditBtn').style.display = 'none';
+  document.getElementById('txAmount').value = '';
+  document.getElementById('txDescription').value = '';
+  setCategoryValue('txCategory', 'txCategoryCustom', '');
+  document.getElementById('txDate').value = localYmd(new Date());
+  document.getElementById('txDirection').value = 'out';
+}
+
+function startEditTransaction(id){
+  const t = state.transactions.find(tx => tx.id === id);
+  if(!t) return;
+  editingTransactionId = id;
+  document.getElementById('txDate').value = t.date;
+  document.getElementById('txAccount').value = t.accountId;
+  document.getElementById('txDirection').value = t.direction;
+  setCategoryValue('txCategory', 'txCategoryCustom', t.category || '');
+  document.getElementById('txAmount').value = String(t.amount).replace('.', ',');
+  document.getElementById('txDescription').value = t.description || '';
+  document.getElementById('txSubmitBtn').textContent = 'Salva modifica';
+  document.getElementById('txCancelEditBtn').style.display = 'inline-block';
+  document.getElementById('txFormError').textContent = '';
+  const panel = document.getElementById('txForm');
+  if(panel) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+document.getElementById('txCancelEditBtn').addEventListener('click', resetTxForm);
 
 async function submitTransaction(){
   const errEl = document.getElementById('txFormError');
@@ -1010,23 +1215,32 @@ async function submitTransaction(){
     return;
   }
   const dateInput = document.getElementById('txDate');
-  const categoryInput = document.getElementById('txCategory');
   const amountInput = document.getElementById('txAmount');
   const descInput = document.getElementById('txDescription');
   const date = dateInput.value;
   const accountId = document.getElementById('txAccount').value;
   const direction = document.getElementById('txDirection').value;
-  const category = categoryInput.value.trim();
+  const category = getCategoryValue('txCategory', 'txCategoryCustom');
   const amount = parseAmount(amountInput.value);
   const description = descInput.value.trim();
   if(!date){ errEl.textContent = 'Seleziona una data.'; return; }
   if(!accountId){ errEl.textContent = 'Seleziona un conto.'; return; }
   if(isNaN(amount) || amount <= 0){ errEl.textContent = 'Inserisci un importo valido maggiore di zero (es. 25,50).'; return; }
-  state.transactions.push({ id: uid(), date, accountId, direction, category, amount, description });
-  categoryInput.value = '';
-  amountInput.value = '';
-  descInput.value = '';
-  dateInput.value = localYmd(new Date());
+
+  if(editingTransactionId){
+    const t = state.transactions.find(tx => tx.id === editingTransactionId);
+    if(t){
+      t.date = date;
+      t.accountId = accountId;
+      t.direction = direction;
+      t.category = category;
+      t.amount = amount;
+      t.description = description;
+    }
+  } else {
+    state.transactions.push({ id: uid(), date, accountId, direction, category, amount, description });
+  }
+  resetTxForm();
   render();
   await saveState();
 }
@@ -1136,8 +1350,12 @@ document.addEventListener('click', async (e) => {
     render();
     await saveState();
   }
+  if(e.target.dataset.editTx){
+    startEditTransaction(e.target.dataset.editTx);
+  }
   if(e.target.dataset.delTx){
     const id = e.target.dataset.delTx;
+    if(editingTransactionId === id) resetTxForm();
     state.transactions = state.transactions.filter(t => t.id !== id);
     render();
     await saveState();
